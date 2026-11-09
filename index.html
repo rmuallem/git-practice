@@ -2,12 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>IT Support Portal</title>
 </head>
 <body>
     <h1>IT Support Portal</h1>
-    <p>Describe your IT problem:</p>
 
+    <p>Describe your IT problem:</p>
     <input type="text" id="problem"
            placeholder="Enter your problem">
 
@@ -19,6 +20,9 @@
     </select>
 
     <button onclick="createTicket()">Create Ticket</button>
+
+    <h2>Created Tickets</h2>
+    <ul id="ticketList"></ul>
 
     <script>
         let ticketNumber = 0;
@@ -34,9 +38,17 @@
 
             ticketNumber++;
 
-            alert("Ticket #" + ticketNumber +
-                  "\nProblem: " + problem +
-                  "\nPriority: " + priority);
+            let ticketList = document.getElementById("ticketList");
+
+            let newTicket = document.createElement("li");
+
+            newTicket.textContent = "Ticket #" + ticketNumber +
+                " - Problem: " + problem +
+                " - Priority: " + priority;
+
+            ticketList.appendChild(newTicket);
+
+            document.getElementById("problem").value = "";
         }
     </script>
 </body>
