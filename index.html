@@ -6,13 +6,17 @@
 </head>
 <body>
     <h1>IT Support Portal</h1>
-    <p>Create a new support ticket.</p>
+    <p>Describe your IT problem:</p>
+
+    <input type="text" id="problem"
+           placeholder="Enter your problem">
 
     <button onclick="createTicket()">Create Ticket</button>
 
     <script>
         function createTicket() {
-            alert("Ticket created successfully!");
+            let problem = document.getElementById("problem").value;
+            alert("Ticket created: " + problem);
         }
     </script>
 </body>
