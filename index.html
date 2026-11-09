@@ -6,6 +6,7 @@
     <title>IT Support Portal</title>
 </head>
 <body>
+
     <h1>IT Support Portal</h1>
 
     <p>Describe your IT problem:</p>
@@ -28,6 +29,7 @@
         let ticketNumber = 0;
 
         function createTicket() {
+
             let problem = document.getElementById("problem").value;
             let priority = document.getElementById("priority").value;
 
@@ -42,14 +44,29 @@
 
             let newTicket = document.createElement("li");
 
-            newTicket.textContent = "Ticket #" + ticketNumber +
+            let ticketText = document.createElement("span");
+
+            ticketText.textContent = "Ticket #" + ticketNumber +
                 " - Problem: " + problem +
-                " - Priority: " + priority;
+                " - Priority: " + priority + " ";
+
+            newTicket.appendChild(ticketText);
+
+            let deleteButton = document.createElement("button");
+
+            deleteButton.textContent = "Delete";
+
+            deleteButton.onclick = function() {
+                newTicket.remove();
+            };
+
+            newTicket.appendChild(deleteButton);
 
             ticketList.appendChild(newTicket);
 
             document.getElementById("problem").value = "";
         }
     </script>
+
 </body>
 </html>
