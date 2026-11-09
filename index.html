@@ -26,8 +26,29 @@
     <ul id="ticketList"></ul>
 
     <script>
-        let ticketNumber = 0;
+        // Load saved tickets
+        let tickets = JSON.parse(
+            localStorage.getItem("tickets") || "[]"
+        );
 
+        let ticketNumber = Number(
+            localStorage.getItem("ticketNumber") || 0
+        );
+
+        // Save tickets
+        function saveTickets() {
+            localStorage.setItem(
+                "tickets",
+                JSON.stringify(tickets)
+            );
+
+            localStorage.setItem(
+                "ticketNumber",
+                ticketNumber
+            );
+        }
+
+        // Create a new ticket
         function createTicket() {
             let problem = document.getElementById("problem").value;
             let priority = document.getElementById("priority").value;
@@ -39,43 +60,77 @@
 
             ticketNumber++;
 
-            let ticketList = document.getElementById("ticketList");
-            let newTicket = document.createElement("li");
-
-            let ticketText = document.createElement("span");
-            ticketText.textContent = "Ticket #" + ticketNumber +
-                " - Problem: " + problem +
-                " - Priority: " + priority + " - Status: ";
-
-            let ticketStatus = document.createElement("span");
-            ticketStatus.textContent = "Open";
-
-            let resolveButton = document.createElement("button");
-            resolveButton.textContent = "Resolve";
-
-            resolveButton.onclick = function() {
-                ticketStatus.textContent = "Resolved";
-                resolveButton.disabled = true;
+            let ticket = {
+                id: ticketNumber,
+                problem: problem.trim(),
+                priority: priority,
+                status: "Open"
             };
 
-            let deleteButton = document.createElement("button");
-            deleteButton.textContent = "Delete";
+            tickets.push(ticket);
 
-            deleteButton.onclick = function() {
-                newTicket.remove();
-            };
-
-            newTicket.appendChild(ticketText);
-            newTicket.appendChild(ticketStatus);
-            newTicket.appendChild(document.createTextNode(" "));
-            newTicket.appendChild(resolveButton);
-            newTicket.appendChild(document.createTextNode(" "));
-            newTicket.appendChild(deleteButton);
-
-            ticketList.appendChild(newTicket);
+            saveTickets();
+            displayTickets();
 
             document.getElementById("problem").value = "";
         }
+
+        // Display all tickets
+        function displayTickets() {
+            let ticketList = document.getElementById("ticketList");
+
+            ticketList.innerHTML = "";
+
+            tickets.forEach(function(ticket) {
+                let newTicket = document.createElement("li");
+
+                let ticketText = document.createElement("span");
+
+                ticketText.textContent =
+                    "Ticket #" + ticket.id +
+                    " - Problem: " + ticket.problem +
+                    " - Priority: " + ticket.priority +
+                    " - Status: " + ticket.status + " ";
+
+                let resolveButton = document.createElement("button");
+                resolveButton.textContent = "Resolve";
+
+                if (ticket.status === "Resolved") {
+                    resolveButton.disabled = true;
+                }
+
+                resolveButton.onclick = function() {
+                    ticket.status = "Resolved";
+                    saveTickets();
+                    displayTickets();
+                };
+
+                let deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+
+                deleteButton.onclick = function() {
+                    tickets = tickets.filter(function(item) {
+                        return item.id !== ticket.id;
+                    });
+
+                    saveTickets();
+                    displayTickets();
+                };
+
+                newTicket.appendChild(ticketText);
+                newTicket.appendChild(resolveButton);
+                newTicket.appendChild(
+                    document.createTextNode(" ")
+                );
+                newTicket.appendChild(deleteButton);
+
+                ticketList.appendChild(newTicket);
+            });
+        }
+
+        // Display saved tickets when page opens
+        displayTickets();
+
     </script>
 
 </body>
