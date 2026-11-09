@@ -29,7 +29,6 @@
         let ticketNumber = 0;
 
         function createTicket() {
-
             let problem = document.getElementById("problem").value;
             let priority = document.getElementById("priority").value;
 
@@ -41,25 +40,36 @@
             ticketNumber++;
 
             let ticketList = document.getElementById("ticketList");
-
             let newTicket = document.createElement("li");
 
             let ticketText = document.createElement("span");
-
             ticketText.textContent = "Ticket #" + ticketNumber +
                 " - Problem: " + problem +
-                " - Priority: " + priority + " ";
+                " - Priority: " + priority + " - Status: ";
 
-            newTicket.appendChild(ticketText);
+            let ticketStatus = document.createElement("span");
+            ticketStatus.textContent = "Open";
+
+            let resolveButton = document.createElement("button");
+            resolveButton.textContent = "Resolve";
+
+            resolveButton.onclick = function() {
+                ticketStatus.textContent = "Resolved";
+                resolveButton.disabled = true;
+            };
 
             let deleteButton = document.createElement("button");
-
             deleteButton.textContent = "Delete";
 
             deleteButton.onclick = function() {
                 newTicket.remove();
             };
 
+            newTicket.appendChild(ticketText);
+            newTicket.appendChild(ticketStatus);
+            newTicket.appendChild(document.createTextNode(" "));
+            newTicket.appendChild(resolveButton);
+            newTicket.appendChild(document.createTextNode(" "));
             newTicket.appendChild(deleteButton);
 
             ticketList.appendChild(newTicket);
