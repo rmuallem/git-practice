@@ -11,12 +11,32 @@
     <input type="text" id="problem"
            placeholder="Enter your problem">
 
+    <p>Select Priority:</p>
+    <select id="priority">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
+
     <button onclick="createTicket()">Create Ticket</button>
 
     <script>
+        let ticketNumber = 0;
+
         function createTicket() {
             let problem = document.getElementById("problem").value;
-            alert("Ticket created: " + problem);
+            let priority = document.getElementById("priority").value;
+
+            if (problem.trim() === "") {
+                alert("Please describe your problem.");
+                return;
+            }
+
+            ticketNumber++;
+
+            alert("Ticket #" + ticketNumber +
+                  "\nProblem: " + problem +
+                  "\nPriority: " + priority);
         }
     </script>
 </body>
