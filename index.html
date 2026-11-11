@@ -1,17 +1,17 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>IT Support Portal</title>
 </head>
+
 <body>
 
     <h1>IT Support Portal</h1>
 
     <p>Describe your IT problem:</p>
-    <input type="text" id="problem"
-           placeholder="Enter your problem">
+    <input type="text" id="problem" placeholder="Enter your problem">
 
     <p>Select Priority:</p>
     <select id="priority">
@@ -23,6 +23,9 @@
     <button onclick="createTicket()">Create Ticket</button>
 
     <h2>Created Tickets</h2>
+
+    <input type="text" id="search" placeholder="Search tickets..." oninput="searchTickets()" />
+
     <ul id="ticketList"></ul>
 
     <script>
@@ -76,56 +79,68 @@
         }
 
         // Display all tickets
+
+        function searchTickets() {
+            displayTickets();
+        }
+
         function displayTickets() {
             let ticketList = document.getElementById("ticketList");
 
             ticketList.innerHTML = "";
 
-            tickets.forEach(function(ticket) {
-                let newTicket = document.createElement("li");
 
-                let ticketText = document.createElement("span");
+            tickets
+                .filter(function (ticket) {
+                    let searchText = document.getElementById("search").value.toLowerCase();
+                    return ticket.problem.toLowerCase().includes(searchText);
+                })
+                .forEach(function (ticket) {
 
-                ticketText.textContent =
-                    "Ticket #" + ticket.id +
-                    " - Problem: " + ticket.problem +
-                    " - Priority: " + ticket.priority +
-                    " - Status: " + ticket.status + " ";
+                    let newTicket = document.createElement("li");
 
-                let resolveButton = document.createElement("button");
-                resolveButton.textContent = "Resolve";
+                    let ticketText = document.createElement("span");
 
-                if (ticket.status === "Resolved") {
-                    resolveButton.disabled = true;
-                }
+                    ticketText.textContent =
+                        "Ticket #" + ticket.id +
+                        " - Problem: " + ticket.problem +
+                        " - Priority: " + ticket.priority +
+                        " - Status: " + ticket.status + " ";
 
-                resolveButton.onclick = function() {
-                    ticket.status = "Resolved";
-                    saveTickets();
-                    displayTickets();
-                };
+                    let resolveButton = document.createElement("button");
+                    resolveButton.textContent = "Resolve";
 
-                let deleteButton = document.createElement("button");
-                deleteButton.textContent = "Delete";
+                    if (ticket.status === "Resolved") {
+                        resolveButton.disabled = true;
+                    }
 
-                deleteButton.onclick = function() {
-                    tickets = tickets.filter(function(item) {
-                        return item.id !== ticket.id;
-                    });
+                    resolveButton.onclick = function () {
+                        ticket.status = "Resolved";
+                        saveTickets();
+                        displayTickets();
+                    };
 
-                    saveTickets();
-                    displayTickets();
-                };
+                    let deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Delete";
 
-                newTicket.appendChild(ticketText);
-                newTicket.appendChild(resolveButton);
-                newTicket.appendChild(
-                    document.createTextNode(" ")
-                );
-                newTicket.appendChild(deleteButton);
+                    deleteButton.onclick = function () {
+                        tickets = tickets.filter(function (item) {
+                            return item.id !== ticket.id;
+                        });
 
-                ticketList.appendChild(newTicket);
-            });
+                        saveTickets();
+                        displayTickets();
+                    };
+
+                    newTicket.appendChild(ticketText);
+                    newTicket.appendChild(resolveButton);
+                    newTicket.appendChild(
+                        document.createTextNode(" ")
+                    );
+                    newTicket.appendChild(deleteButton);
+
+                    ticketList.appendChild(newTicket);
+                });
         }
 
         // Display saved tickets when page opens
@@ -134,4 +149,5 @@
     </script>
 
 </body>
+
 </html>
